@@ -414,6 +414,7 @@ const getPlaylistAllSongs = async (
 const listScroll = (e: Event) => {
   // 滚动高度
   const scrollTop = (e.target as HTMLElement).scrollTop;
+  console.log(scrollTop)
   // listScrolling.value = scrollTop > 10;
   listScrolling.value = true;
 };
