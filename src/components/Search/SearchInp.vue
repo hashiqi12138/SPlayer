@@ -184,7 +184,7 @@ onMounted(() => {
 
 @media screen and (max-width: 600px) {
   .search-input {
-    width: 160px !important;
+    width: 100px !important;
   }
 }
 </style>
