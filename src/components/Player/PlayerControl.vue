@@ -168,7 +168,7 @@ const sliderDragend = () => {
   .right {
     opacity: 0;
     height: 100%;
-    padding: 0 30px;
+    padding: 0 10px;
     transition: opacity 0.3s;
     .menu-icon {
       display: flex;

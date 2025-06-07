@@ -252,6 +252,10 @@ onMounted(() => {
 }
 
 @media screen and (max-width: 600px) {
+  .nav-main {
+    justify-content: space-between!important;
+  }
+
   .page-control {
     display: none !important;
   }

@@ -58,7 +58,7 @@ const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   }
   .left,
   .right {
-    padding: 0 20px;
+    padding: 0 10px;
     transition: opacity 0.3s;
     .menu-icon {
       display: flex;

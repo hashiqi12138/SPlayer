@@ -573,7 +573,7 @@ onBeforeUnmount(() => {
   }
   &.pure {
     :deep(.n-scrollbar-content) {
-      padding: 0 80px;
+      padding: 0 40px;
     }
     .lyric-content {
       .placeholder {

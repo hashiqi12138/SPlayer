@@ -6,12 +6,9 @@
         <n-text :depth="3">个性化与全局设置</n-text>
       </div>
       <!-- 设置菜单 -->
-      <n-menu
-        v-model:value="activeKey"
-        :options="menuOptions"
-        :indent="10"
-        @update:value="setScrollbar?.scrollTo({ top: 0, behavior: 'smooth' })"
-      />
+      <n-menu v-model:value="activeKey" :options="menuOptions" :indent="0"
+        @update:value="setScrollbar?.scrollTo({ top: 0, behavior: 'smooth' })" :collapsed="true" :collapsed-width="32"
+        :collapsed-icon-size="24" />
       <!-- 信息 -->
       <div class="power">
         <n-text class="author" :depth="2" @click="toGithub">
@@ -22,11 +19,7 @@
         <n-text class="version" depth="3">{{ packageJson.version }}</n-text>
       </div>
     </div>
-    <n-scrollbar
-      ref="setScrollbar"
-      class="set-content"
-      :content-style="{ overflow: 'hidden', padding: '40px 0' }"
-    >
+    <n-scrollbar ref="setScrollbar" class="set-content" :content-style="{ overflow: 'hidden', padding: '40px 0' }">
       <Transition name="fade" mode="out-in">
         <!-- 常规 -->
         <GeneralSetting v-if="activeKey === 'general'" />
@@ -68,39 +61,67 @@ const menuOptions: MenuOption[] = [
   {
     key: "general",
     label: "常规设置",
-    icon: renderIcon("SettingsLine"),
+    icon: renderIcon("SettingsLine", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "play",
     label: "播放设置",
-    icon: renderIcon("Music"),
+    icon: renderIcon("Music", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "lyrics",
     label: "歌词设置",
-    icon: renderIcon("Lyrics"),
+    icon: renderIcon("Lyrics", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "keyboard",
     label: "快捷键设置",
     show: isElectron,
-    icon: renderIcon("Keyboard"),
+    icon: renderIcon("Keyboard", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "local",
     label: "本地与下载",
     show: isElectron,
-    icon: renderIcon("Storage"),
+    icon: renderIcon("Storage", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "other",
     label: "其他设置",
-    icon: renderIcon("SettingsOther"),
+    icon: renderIcon("SettingsOther", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
   {
     key: "about",
     label: "关于",
-    icon: renderIcon("Info"),
+    icon: renderIcon("Info", {
+      style: {
+        transform: "translateX(8px)",
+      },
+    }),
   },
 ];
 
@@ -116,15 +137,18 @@ const toGithub = () => {
   width: 100%;
   height: 75vh;
   min-height: 75vh;
+
   .set-left {
     display: flex;
     flex-direction: column;
-    width: 280px;
+    width: 60px;
     height: 100%;
-    padding: 20px;
+    padding: 4px;
     background-color: var(--surface-container-hex);
+
     .title {
       margin: 10px 0 20px 10px;
+
       .n-h1 {
         font-size: 26px;
         font-weight: bold;
@@ -133,28 +157,35 @@ const toGithub = () => {
         margin-bottom: 6px;
       }
     }
+
     .n-menu {
       width: 100%;
       padding: 0;
     }
+
     .power {
       margin: auto 0 0 10px;
+      display: none;
+
       .name {
         font-weight: bold;
         margin-right: 6px;
       }
+
       .version {
         &::before {
           content: "v";
           margin-right: 2px;
         }
       }
+
       .author {
         display: flex;
         flex-direction: row;
         align-items: center;
         margin-bottom: 4px;
         cursor: pointer;
+
         .n-icon {
           margin-right: 4px;
         }
@@ -170,6 +201,7 @@ const toGithub = () => {
   width: calc(100vw - 40px);
   max-width: 1024px !important;
   overflow: hidden;
+
   .n-card-header {
     position: absolute;
     top: 0;
@@ -177,37 +209,47 @@ const toGithub = () => {
     padding: 20px;
     z-index: 1;
   }
+
   .n-card__content {
     padding: 0;
+
     .setting-type {
       transition: opacity 0.2s ease-in-out;
     }
+
     .set-content {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 10px;
       background-color: var(--background-hex);
       // background-color: rgba(var(--surface-container), 0.28);
     }
+
     .set-list {
       margin-bottom: 30px;
+
       &:last-child {
         margin-bottom: 0;
       }
     }
+
     .n-collapse-transition {
       margin-bottom: 12px;
+
       &:last-child {
         margin-bottom: 0;
       }
     }
+
     .set-item {
       width: 100%;
       border-radius: 8px;
       margin-bottom: 12px;
       transition: margin 0.3s;
+
       &:last-child {
         margin-bottom: 0;
       }
+
       .n-card__content {
         display: flex;
         flex-direction: row;
@@ -215,23 +257,29 @@ const toGithub = () => {
         justify-content: space-between;
         padding: 16px;
       }
+
       .label {
         display: flex;
         flex-direction: column;
         padding-right: 20px;
+
         .name {
           font-size: 16px;
         }
       }
+
       .n-flex {
         flex-flow: nowrap !important;
       }
+
       .set {
         justify-content: flex-end;
         width: 200px;
+
         &.n-switch {
           width: max-content;
         }
+
         @media (max-width: 768px) {
           width: 140px;
           min-width: 140px;
@@ -239,6 +287,7 @@ const toGithub = () => {
       }
     }
   }
+
   .n-menu {
     .n-menu-item-content {
       &::before {
