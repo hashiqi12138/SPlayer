@@ -259,5 +259,9 @@ onMounted(() => {
   .client-control {
      display: none !important;
   }
+
+  .nav-drag {
+    display: none!important;
+  }
 }
 </style>
