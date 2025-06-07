@@ -218,6 +218,7 @@ onMounted(() => {
     width: 40px;
     height: 40px;
     -webkit-app-region: no-drag;
+    z-index: 10;
   }
   .nav-main {
     flex: 1;
@@ -247,6 +248,16 @@ onMounted(() => {
   margin-top: 12px;
   :deep(.n-checkbox__label) {
     line-height: 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .page-control {
+    display: none !important;
+  }
+
+  .client-control {
+     display: none !important;
   }
 }
 </style>

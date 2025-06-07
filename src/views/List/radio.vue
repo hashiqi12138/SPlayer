@@ -207,7 +207,7 @@ const loading = ref<boolean>(true);
 const loadingMsg = ref<MessageReactive | null>(null);
 
 // 列表是否滚动
-const listScrolling = ref<boolean>(false);
+const listScrolling = ref<boolean>(true);
 
 // 列表应该展示数据
 const playlistDataShow = computed(() =>
@@ -292,7 +292,8 @@ const getRadioAllProgram = async (id: number, count: number) => {
 const listScroll = (e: Event) => {
   // 滚动高度
   const scrollTop = (e.target as HTMLElement).scrollTop;
-  listScrolling.value = scrollTop > 10;
+  // listScrolling.value = scrollTop > 10;
+  listScrolling.value = true;
 };
 
 // 清除输入
@@ -566,6 +567,16 @@ onMounted(() => getRadioDetail(radioId.value));
     .loading,
     .n-empty {
       padding-top: 120px;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+
+  .playlist {
+    :deep(.menu) {
+      bottom: -30px !important;
+      flex-direction: column!important;
     }
   }
 }

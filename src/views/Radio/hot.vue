@@ -18,13 +18,13 @@
                 })
               "
             >
-              <n-text>{{ item.name }}</n-text>
+              <n-ellipsis>{{ item.name }}</n-ellipsis>
             </n-card>
           </n-gi>
           <n-gi class="suffix" suffix #="{ overflow }">
             <n-card class="cat" hoverable @click="gridCollapsed = !gridCollapsed">
               <SvgIcon :name="overflow ? 'Down' : 'Up'" />
-              <n-text>{{ overflow ? "查看全部" : "收起标签" }}</n-text>
+              <n-ellipsis>{{ overflow ? "查看全部" : "收起标签" }}</n-ellipsis>
             </n-card>
           </n-gi>
         </n-grid>

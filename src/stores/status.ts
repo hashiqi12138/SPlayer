@@ -44,7 +44,7 @@ interface StatusState {
 export const useStatusStore = defineStore("status", {
   state: (): StatusState => ({
     // 菜单折叠状态
-    menuCollapsed: false,
+    menuCollapsed: true,
     // 搜索框状态
     searchFocus: false,
     searchInputValue: "",

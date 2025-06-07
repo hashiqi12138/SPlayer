@@ -164,6 +164,7 @@ onBeforeMount(() => {
   transition: background-color 0.3s;
   cursor: pointer;
   -webkit-app-region: no-drag;
+  z-index: 10;
   .avatar {
     display: flex;
     align-items: center;

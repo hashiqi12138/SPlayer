@@ -181,4 +181,10 @@ onMounted(() => {
     -webkit-app-region: no-drag;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .search-input {
+    width: 160px !important;
+  }
+}
 </style>

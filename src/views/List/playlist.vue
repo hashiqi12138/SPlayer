@@ -52,7 +52,7 @@
             <!-- 简介 -->
             <n-ellipsis
               v-if="playlistDetailData.description"
-              :line-clamp="1"
+              :line-clamp="3"
               :tooltip="{
                 trigger: 'click',
                 placement: 'bottom',
@@ -252,7 +252,7 @@ const loading = ref<boolean>(true);
 const loadingMsg = ref<MessageReactive | null>(null);
 
 // 列表是否滚动
-const listScrolling = ref<boolean>(false);
+const listScrolling = ref<boolean>(true);
 
 // 列表应该展示数据
 const playlistDataShow = computed(() =>
@@ -350,7 +350,7 @@ const resetPlaylistData = (getList: boolean) => {
   playlistDetailData.value = null;
   if (getList) {
     playlistData.value = [];
-    listScrolling.value = false;
+    listScrolling.value = true;
   }
 };
 
@@ -414,7 +414,8 @@ const getPlaylistAllSongs = async (
 const listScroll = (e: Event) => {
   // 滚动高度
   const scrollTop = (e.target as HTMLElement).scrollTop;
-  listScrolling.value = scrollTop > 10;
+  // listScrolling.value = scrollTop > 10;
+  listScrolling.value = true;
 };
 
 // 清除输入
@@ -745,6 +746,17 @@ onMounted(() => getPlaylistDetail(playlistId.value));
     .loading,
     .n-empty {
       padding-top: 120px;
+    }
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+
+  .playlist {
+    :deep(.menu) {
+      bottom: -30px !important;
+      flex-direction: column!important;
     }
   }
 }
