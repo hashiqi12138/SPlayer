@@ -22,7 +22,7 @@
       <!-- 用户 -->
       <User v-if="settingStore.useOnlineService" />
       <!-- 设置菜单 -->
-      <n-dropdown :options="setOptions" trigger="click" show-arrow @select="setSelect">
+      <n-dropdown v-if="isDev" :options="setOptions" trigger="click" show-arrow @select="setSelect">
         <n-button :focusable="false" title="设置" tertiary circle>
           <template #icon>
             <SvgIcon name="Settings" />

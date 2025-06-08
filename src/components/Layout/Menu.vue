@@ -30,7 +30,7 @@ import type { CoverType } from "@/types/main";
 import { useStatusStore, useSettingStore, useDataStore, useMusicStore } from "@/stores";
 import { useRouter, RouterLink } from "vue-router";
 import { isElectron, renderIcon } from "@/utils/helper";
-import { openCreatePlaylist } from "@/utils/modal";
+import { openCreatePlaylist, openSetting } from "@/utils/modal";
 import { debounce } from "lodash-es";
 import { isLogin } from "@/utils/auth";
 import player from "@/utils/player";
@@ -139,6 +139,12 @@ const menuOptions = computed<MenuOption[] | MenuGroupOption[]>(() => {
           icon: renderIcon("History"),
         },
         {
+          key: "setting",
+          link: "",
+          label: "全局设置",
+          icon: renderIcon("Settings"),
+        },
+        {
           key: "divider-two",
           type: "divider",
         },
@@ -244,6 +250,9 @@ const menuUpdate = (key: string, item: MenuOption) => {
     statusStore.showFullPlayer = true;
     window.$message.info("已开启私人漫游", { icon: renderIcon("Radio") });
     return;
+  }
+  if (key === 'setting') {
+    openSetting()
   }
   if (typeof key === "number") {
     router.push({

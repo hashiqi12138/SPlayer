@@ -1,7 +1,7 @@
 <template>
   <div class="home-online">
     <!-- 登录功能 -->
-    <n-grid v-if="isLogin()" :cols="2" :x-gap="20" class="main-rec">
+    <n-grid v-if="isLogin()" :cols="1" :x-gap="20" y-gap=20 class="main-rec">
       <n-gi>
         <n-flex :size="20" class="rec-list" justify="space-between" vertical>
           <!-- 每日推荐 -->
