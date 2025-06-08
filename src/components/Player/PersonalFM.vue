@@ -130,9 +130,9 @@ onMounted(player.initPersonalFM);
     width: 100%;
   }
   .cover {
-    width: 160px;
-    height: 160px;
-    min-width: 160px;
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
     border-radius: 8px;
     margin-right: 20px;
     display: flex;
@@ -224,7 +224,7 @@ onMounted(player.initPersonalFM);
   .radio {
     position: absolute;
     right: 20px;
-    bottom: 14px;
+    bottom: 10px;
     display: flex;
     align-items: center;
     .n-icon {

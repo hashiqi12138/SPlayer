@@ -200,7 +200,7 @@ const searchData = ref<SongType[]>([]);
 const albumId = computed<number>(() => Number(router.currentRoute.value.query.id as string));
 
 // 列表是否滚动
-const listScrolling = ref<boolean>(false);
+const listScrolling = ref<boolean>(true);
 
 // 是否处于收藏专辑
 const isLikeAlbum = computed(() =>
@@ -252,8 +252,9 @@ const getAlbumDetail = async (id: number, refresh: boolean = false) => {
 // 列表滚动
 const listScroll = (e: Event) => {
   // 滚动高度
-  const scrollTop = (e.target as HTMLElement).scrollTop;
-  listScrolling.value = scrollTop > 10;
+  // const scrollTop = (e.target as HTMLElement).scrollTop;
+  console.log(e)
+  listScrolling.value = true;
 };
 
 // 清除输入
@@ -471,6 +472,16 @@ onMounted(() => {
     .loading,
     .n-empty {
       padding-top: 120px;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+
+  .album {
+    :deep(.menu) {
+      bottom: -30px !important;
+      flex-direction: column!important;
     }
   }
 }

@@ -204,7 +204,7 @@ const loading = ref<boolean>(true);
 const loadingMsg = ref<MessageReactive | null>(null);
 
 // 列表是否滚动
-const listScrolling = ref<boolean>(false);
+const listScrolling = ref<boolean>(true);
 
 // 列表应该展示数据
 const playlistDataShow = computed(() =>
@@ -350,8 +350,9 @@ const getPlaylistAllSongs = async (
 // 列表滚动
 const listScroll = (e: Event) => {
   // 滚动高度
-  const scrollTop = (e.target as HTMLElement).scrollTop;
-  listScrolling.value = scrollTop > 10;
+  // const scrollTop = (e.target as HTMLElement).scrollTop;
+  console.log(e)
+  listScrolling.value = true
 };
 
 // 清除输入
@@ -623,6 +624,15 @@ onMounted(async () => {
     .loading,
     .n-empty {
       padding-top: 120px;
+    }
+  }
+}
+@media screen and (max-width: 600px) {
+
+  .liked {
+    :deep(.menu) {
+      bottom: -30px !important;
+      flex-direction: column!important;
     }
   }
 }
