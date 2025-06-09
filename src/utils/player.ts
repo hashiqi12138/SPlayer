@@ -201,7 +201,7 @@ class Player {
       format: allowPlayFormat,
       html5: true,
       autoplay: autoPlay,
-      preload: "metadata",
+      preload: false,
       pool: 1,
       volume: statusStore.playVolume,
       rate: statusStore.playRate,

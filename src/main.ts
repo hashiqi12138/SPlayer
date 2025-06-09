@@ -14,10 +14,6 @@ import "@/style/main.scss";
 import "@/style/animate.scss";
 import "github-markdown-css/github-markdown.css";
 
-import VConsole from 'vconsole';
-const vConsole = new VConsole();
-console.log(vConsole)
-
 // 初始化 ipc
 initIpc();
 
