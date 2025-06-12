@@ -54,7 +54,8 @@ export const songAsset = (
     params: {
       url
     },
-    responseType: 'blob'
+    responseType: 'blob',
+    withCredentials: false
   });
 };
 
