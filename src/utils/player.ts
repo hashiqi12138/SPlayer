@@ -9,7 +9,7 @@ import { getCoverColorData } from "@/utils/color";
 import { calculateProgress } from "./time";
 import { isElectron, isDev } from "./helper";
 import { heartRateList } from "@/api/playlist";
-import { songAsset } from "@/api/song";
+// import { songAsset } from "@/api/song";
 import { formatSongsList } from "./format";
 import { isLogin } from "./auth";
 import { openUserLogin } from "./modal";
