@@ -9,7 +9,7 @@ import { getCoverColorData } from "@/utils/color";
 import { calculateProgress } from "./time";
 import { isElectron, isDev } from "./helper";
 import { heartRateList } from "@/api/playlist";
-// import { songAsset } from "@/api/song";
+import { songAsset } from "@/api/song";
 import { formatSongsList } from "./format";
 import { isLogin } from "./auth";
 import { openUserLogin } from "./modal";
@@ -198,16 +198,12 @@ class Player {
     // 清理播放器
     Howler.unload();
 
-    // const arraybuffer = await songAsset(baseURL + '/song/asset/v1?url=' + encodeURIComponent(src))
+    const arraybuffer = await songAsset(baseURL + '/song/asset/v1?url=' + encodeURIComponent(src))
 
-    // console.log(arraybuffer)
+    console.log(arraybuffer)
 
     // const blob = new Blob([arraybuffer], { type: 'audio/mpeg' });
-    const [arg, query] = src.split('?')
-    const args = arg.split('/')
-    const domain = args[2]
-    const left = args.slice(3).join('/')
-    const url = baseURL + `/song/proxy/${left + '?' + encodeURIComponent(query)}&domain=${domain}`
+    const url = URL.createObjectURL(arraybuffer);
 
 
     // 创建播放器
