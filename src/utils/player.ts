@@ -9,11 +9,13 @@ import { getCoverColorData } from "@/utils/color";
 import { calculateProgress } from "./time";
 import { isElectron, isDev } from "./helper";
 import { heartRateList } from "@/api/playlist";
+import { songAsset } from "@/api/song";
 import { formatSongsList } from "./format";
 import { isLogin } from "./auth";
 import { openUserLogin } from "./modal";
 import { personalFm, personalFmToTrash } from "@/api/rec";
 import blob from "./blob";
+import { baseURL } from "./request";
 
 // 播放器核心
 // Howler.js
@@ -195,9 +197,20 @@ class Player {
     const { id, path, type } = musicStore.playSong;
     // 清理播放器
     Howler.unload();
+
+    // const arraybuffer = await songAsset(baseURL + '/song/asset/v1?url=' + encodeURIComponent(src))
+
+    // console.log(arraybuffer)
+
+    // const blob = new Blob([arraybuffer], { type: 'audio/mpeg' });
+    const url = baseURL + '/song/proxy/' + src
+
+
     // 创建播放器
     this.player = new Howl({
-      src,
+      // src: baseURL + '/song/asset/v1?url=' + encodeURIComponent(src),
+      src: url,
+      // src,
       format: allowPlayFormat,
       html5: true,
       autoplay: autoPlay,

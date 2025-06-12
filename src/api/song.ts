@@ -45,6 +45,19 @@ export const songUrl = (
   });
 };
 
+// 获取歌曲 arraybuffer
+export const songAsset = (
+  url
+) => {
+  return request({
+    url: "/song/asset/v1",
+    params: {
+      url
+    },
+    responseType: 'blob'
+  });
+};
+
 // 获取解锁歌曲 URL
 export const unlockSongUrl = (id: number, keyword: string, server: "netease" | "kuwo") => {
   const params = server === "netease" ? { id } : { keyword };
