@@ -102,7 +102,8 @@
         </div>
       </div>
       <!-- 专辑 -->
-      <div v-if="false && song.type !== 'radio' && !hiddenAlbum" class="album text-hidden">
+      <!--
+      <div v-if="song.type !== 'radio' && !hiddenAlbum" class="album text-hidden">
         <n-text
           v-if="isObject(song.album)"
           class="album-text"
@@ -119,6 +120,7 @@
           {{ song.album || "未知专辑" }}
         </n-text>
       </div>
+      -->
       <!-- 操作 -->
       <div v-if="song.type !== 'radio'" class="actions" @click.stop @dblclick.stop>
         <!-- 喜欢歌曲 -->
@@ -153,7 +155,7 @@ import { useStatusStore, useMusicStore, useDataStore } from "@/stores";
 import { formatNumber, isElectron } from "@/utils/helper";
 import { openJumpArtist } from "@/utils/modal";
 import { toLikeSong } from "@/utils/auth";
-import { isObject } from "lodash-es";
+// import { isObject } from "lodash-es";
 import { formatTimestamp, msToTime } from "@/utils/time";
 import player from "@/utils/player";
 import blob from "@/utils/blob";
