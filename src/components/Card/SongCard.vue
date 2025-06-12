@@ -102,7 +102,7 @@
         </div>
       </div>
       <!-- 专辑 -->
-      <div v-if="song.type !== 'radio' && !hiddenAlbum" class="album text-hidden">
+      <div v-if="false && song.type !== 'radio' && !hiddenAlbum" class="album text-hidden">
         <n-text
           v-if="isObject(song.album)"
           class="album-text"

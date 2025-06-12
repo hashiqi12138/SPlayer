@@ -44,7 +44,7 @@
                 </div>
               </n-dropdown>
               <n-text v-else class="title">标题</n-text>
-              <n-text v-if="type !== 'radio' && !hiddenAlbum" class="album">专辑</n-text>
+              <n-text v-if="false && type !== 'radio' && !hiddenAlbum" class="album">专辑</n-text>
               <n-text v-if="type !== 'radio'" class="actions">操作</n-text>
               <n-text v-if="type === 'radio'" class="meta date">更新日期</n-text>
               <n-text v-if="type === 'radio'" class="meta">播放量</n-text>
