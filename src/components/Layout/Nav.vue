@@ -256,6 +256,14 @@ onMounted(() => {
     justify-content: space-between!important;
   }
 
+  .nav {
+    padding: 0 4px!important;
+
+    .nav-main {
+      margin-left: 4px;
+    }
+  }
+
   .page-control {
     display: none !important;
   }
