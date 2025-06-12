@@ -203,7 +203,11 @@ class Player {
     // console.log(arraybuffer)
 
     // const blob = new Blob([arraybuffer], { type: 'audio/mpeg' });
-    const url = baseURL + '/song/proxy/' + encodeURIComponent(src)
+    const [arg, query] = src.split('?')
+    const args = arg.split('/')
+    const domain = args[2]
+    const left = args.slice(3).join('/')
+    const url = baseURL + `/song/proxy/${left + '?' + encodeURIComponent(query)}&domain=${domain}`
 
 
     // 创建播放器
