@@ -6,7 +6,7 @@
     :style="{ '--main-color': statusStore.mainColor }"
     :auto-focus="false"
     id="main-playlist"
-    style="width: 400px"
+    style="width: 300px"
   >
     <n-drawer-content :native-scrollbar="false" closable>
       <template #header>

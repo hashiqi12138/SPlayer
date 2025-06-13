@@ -52,7 +52,7 @@ const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   }
   .drag-dom {
     height: 80px;
-    margin: 0 100px;
+    margin: 0 60px;
     flex: 1;
     -webkit-app-region: drag;
   }

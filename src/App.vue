@@ -23,7 +23,7 @@
         }"
         :native-scrollbar="false"
         :collapsed="statusStore.menuCollapsed"
-        :collapsed-width="64"
+        :collapsed-width="52"
         :width="240"
         collapse-mode="width"
         show-trigger="bar"
