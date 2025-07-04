@@ -1,5 +1,6 @@
 import { songLevelData } from "@/utils/meta";
-import request from "@/utils/request";
+import request, { baseURL } from "@/utils/request";
+import axios from "axios";
 
 // 获取歌曲详情
 export const songDetail = (ids: number | number[]) => {
@@ -49,13 +50,14 @@ export const songUrl = (
 export const songAsset = (
   url
 ) => {
-  return request({
-    url: "/song/asset/v1",
+  return axios({
+    url,
     params: {
-      url
+      // url
     },
     responseType: 'blob',
-    withCredentials: false
+    withCredentials: false,
+    baseURL: ''
   });
 };
 

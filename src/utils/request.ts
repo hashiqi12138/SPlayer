@@ -5,8 +5,9 @@ import { getCookie } from "./cookie";
 import { isLogin } from "./auth";
 
 // 全局地址
-export const baseURL: string = String(isDev ? "/api/netease" : import.meta.env["VITE_API_URL"]);
-// export const baseURL: string = "http://localhost:8888/api"
+export const baseURL: string = String(isDev ? "http://localhost:3889/api/netease/" : import.meta.env["VITE_API_URL"]);
+// export const baseURL: string = "http://localhost:3889/api/netease/"
+// export const baseURL: string  = location.host === 'lededoor.v6.rocks:3889' ? 'http://lededoor.v6.rocks:3887' : import.meta.env["VITE_API_URL"]
 
 // 基础配置
 const server: AxiosInstance = axios.create({

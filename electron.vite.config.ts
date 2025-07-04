@@ -111,7 +111,7 @@ export default defineConfig(({ command, mode }) => {
         },
         terserOptions: {
           compress: {
-            pure_funcs: ["console.log"],
+            // pure_funcs: ["console.log"],
           },
         },
         sourcemap: false,

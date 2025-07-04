@@ -198,12 +198,14 @@ class Player {
     // 清理播放器
     Howler.unload();
 
-    const arraybuffer = await songAsset(baseURL + '/song/asset/v1?url=' + encodeURIComponent(src))
+    const arraybuffer = await songAsset(location.origin + '/proxy/' + src)
 
     console.log(arraybuffer)
 
     // const blob = new Blob([arraybuffer], { type: 'audio/mpeg' });
-    const url = URL.createObjectURL(arraybuffer);
+    const url = URL.createObjectURL(arraybuffer.data);
+
+    // const url = '/proxy/' + src
 
 
     // 创建播放器

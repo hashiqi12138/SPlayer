@@ -1,7 +1,7 @@
 <template>
   <Transition name="fade" mode="out-in">
     <div v-if="data.length > 0" class="artist-list">
-      <n-grid :cols="cols" x-gap="20" y-gap="20">
+      <n-grid :cols="cols" x-gap="10" y-gap="10">
         <n-gi
           v-for="(item, index) in data"
           :key="index"
@@ -80,7 +80,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  cols: "4 600:4 800:5 900:6 1200:7 1400:8",
+  cols: "2 600:2 800:3 900:4 1200:5 1400:6",
 });
 
 const emit = defineEmits<{
