@@ -223,12 +223,23 @@ import { renderIcon, isElectron, coverLoaded } from "@/utils/helper";
 import { toLikeSong } from "@/utils/auth";
 import { openDownloadSong, openJumpArtist, openPlaylistAdd } from "@/utils/modal";
 import player from "@/utils/player";
+import { HeadphoneDetector } from "@/utils/headphone";
 
 const router = useRouter();
 const dataStore = useDataStore();
 const musicStore = useMusicStore();
 const statusStore = useStatusStore();
 const settingStore = useSettingStore();
+
+async function onDeviceChange() {
+  if (statusStore.playStatus) await player.pause();
+}
+
+const headphone = new HeadphoneDetector()
+
+headphone.onHeadphoneChange(onDeviceChange);
+
+headphone.startListening()
 
 // 播放模式数据
 const playModeOptions = ref([

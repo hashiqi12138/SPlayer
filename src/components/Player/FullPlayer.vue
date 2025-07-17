@@ -106,10 +106,20 @@ import { useStatusStore, useMusicStore, useSettingStore } from "@/stores";
 import { isElectron } from "@/utils/helper";
 import { throttle } from "lodash-es";
 import player from "@/utils/player";
+import { HeadphoneDetector } from "@/utils/headphone";
 
 const musicStore = useMusicStore();
 const statusStore = useStatusStore();
 const settingStore = useSettingStore();
+
+
+async function onDeviceChange() {
+  if (statusStore.playStatus) await player.pause();
+}
+
+const headphone = new HeadphoneDetector()
+
+headphone.onHeadphoneChange(onDeviceChange);
 
 // 是否显示评论
 const isShowComment = computed<boolean>(

@@ -195,10 +195,11 @@ class Player {
     const settingStore = useSettingStore();
     // 播放信息
     const { id, path, type } = musicStore.playSong;
-    // 清理播放器
-    Howler.unload();
 
     const arraybuffer = await songAsset(location.origin + '/proxy/' + src)
+
+    // 清理播放器
+    Howler.unload();
 
     console.log(arraybuffer)
 
@@ -216,7 +217,7 @@ class Player {
       format: allowPlayFormat,
       html5: true,
       autoplay: autoPlay,
-      preload: false,
+      preload: "metadata",
       pool: 1,
       volume: statusStore.playVolume,
       rate: statusStore.playRate,

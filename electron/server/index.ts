@@ -6,13 +6,21 @@ import fastifyCookie from "@fastify/cookie";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import fastify from "fastify";
+import { readFileSync } from "fs";
 import log from "../main/logger";
 
 const initAppServer = async () => {
   try {
+    // 配置 HTTPS 选项
+    const httpsOptions = {
+      key: readFileSync(join(__dirname, "../../myprivate.key")),
+      cert: readFileSync(join(__dirname, "../../mycertificate.crt")),
+    };
+
     const server = fastify({
       // 忽略尾随斜杠
       ignoreTrailingSlash: true,
+      https: httpsOptions, // 启用 HTTPS
     });
     // 注册插件
     server.register(fastifyCookie);

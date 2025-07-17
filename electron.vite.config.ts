@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { MainEnv } from "./env";
 import { defineConfig, externalizeDepsPlugin, loadEnv } from "electron-vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
@@ -7,6 +7,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import viteCompression from "vite-plugin-compression";
 import wasm from "vite-plugin-wasm";
+import { readFileSync } from "fs";
 
 export default defineConfig(({ command, mode }) => {
   // 读取环境变量
@@ -17,6 +18,12 @@ export default defineConfig(({ command, mode }) => {
   // 获取端口
   const webPort: number = Number(getEnv("VITE_WEB_PORT") || 14558);
   const servePort: number = Number(getEnv("VITE_SERVER_PORT") || 25884);
+
+  // 配置 HTTPS 选项
+  const httpsOptions = {
+    key: readFileSync(join(__dirname, "./myprivate.key")),
+    cert: readFileSync(join(__dirname, "./mycertificate.crt")),
+  };
   // 返回配置
   return {
     // 主进程
@@ -84,12 +91,20 @@ export default defineConfig(({ command, mode }) => {
       server: {
         host: '0.0.0.0',
         port: webPort,
+        https: httpsOptions, // 使用HTTPS配置
         // 代理
         proxy: {
           "/api": {
-            target: `http://127.0.0.1:${servePort}`,
+            target: `http://192.168.2.145:3889`,
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, "/api/"),
+            secure: false, // 允许自签名证书
+          },
+          "/proxy": {
+            target: `http://192.168.2.145:3889`,
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/proxy/, "/proxy/"),
+            secure: false, // 允许自签名证书
           },
         },
       },

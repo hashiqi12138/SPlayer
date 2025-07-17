@@ -63,6 +63,11 @@ COPY out/renderer/ /usr/share/nginx/html
 # 复制优化后的 Nginx 配置文件
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# 复制证书文件
+COPY mycertificate.crt /etc/nginx/ssl/mycertificate.crt
+COPY myprivate.key /etc/nginx/ssl/myprivate.key
+COPY myrequest.csr /etc/nginx/ssl/myrequest.csr
+
 # 创建健康检查文件
 RUN echo "OK" > /usr/share/nginx/html/healthz
 
