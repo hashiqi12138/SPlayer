@@ -54,8 +54,8 @@ const initAppServer = async () => {
     server.register(initNcmAPI, { prefix: "/api" });
     server.register(initUnblockAPI, { prefix: "/api" });
     // 启动端口
-    const port = Number(import.meta.env["VITE_SERVER_PORT"] || 25884);
-    await server.listen({ port, host: '0.0.0.0' });
+    const port = Number(process.env["VITE_SERVER_PORT"] || 25884);
+    await server.listen({ port });
     log.info(`🌐 Starting AppServer on port ${port}`);
     return server;
   } catch (error) {

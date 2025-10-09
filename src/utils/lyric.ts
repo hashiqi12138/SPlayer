@@ -1,4 +1,4 @@
-import { LyricLine, parseLrc, parseYrc } from "@applemusic-like-lyrics/lyric";
+import { LyricLine, parseLrc, parseYrc, parseTTML } from "@applemusic-like-lyrics/lyric";
 import type { LyricType } from "@/types/main";
 import { useMusicStore, useSettingStore } from "@/stores";
 import { msToS } from "./time";
@@ -207,3 +207,50 @@ const parseAMData = (lrcData: LyricLine[], tranData?: LyricLine[], romaData?: Ly
     isDuet: line.isDuet ?? false,
   }));
 };
+
+/**
+ * 从TTML格式解析歌词并转换为AMLL格式
+ * @param ttmlContent TTML格式的歌词内容
+ * @returns AMLL格式的歌词行数组
+ */
+export function parseTTMLToAMLL(ttmlContent: string): LyricLine[] {
+  if (!ttmlContent) return [];
+
+  try {
+    const parsedResult = parseTTML(ttmlContent);
+    if (!parsedResult?.lines?.length) return [];
+
+    const validLines = parsedResult.lines
+      .filter((line): line is any => line && typeof line === "object" && Array.isArray(line.words))
+      .map((line) => {
+        const words = line.words
+          .filter((word: any) => word && typeof word === "object")
+          .map((word: any) => ({
+            word: String(word.word || " "),
+            startTime: Number(word.startTime) || 0,
+            endTime: Number(word.endTime) || 0,
+          }));
+
+        if (!words.length) return null;
+
+        const startTime = words[0].startTime;
+        const endTime = words[words.length - 1].endTime;
+
+        return {
+          words,
+          startTime,
+          endTime,
+          translatedLyric: String(line.translatedLyric || ""),
+          romanLyric: String(line.romanLyric || ""),
+          isBG: Boolean(line.isBG),
+          isDuet: Boolean(line.isDuet),
+        };
+      })
+      .filter((line): line is LyricLine => line !== null);
+
+    return validLines;
+  } catch (error) {
+    console.error("TTML parsing error:", error);
+    return [];
+  }
+}

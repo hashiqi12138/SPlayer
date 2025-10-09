@@ -1,27 +1,16 @@
 <template>
   <Transition>
-    <div
-      :key="amLyricsData?.[0]?.startTime"
-      :class="['lyric-am', { pure: statusStore.pureLyricMode }]"
-    >
-      <LyricPlayer
-        ref="lyricPlayerRef"
-        :lyricLines="amLyricsData"
-        :currentTime="playSeek"
-        :playing="statusStore.playStatus"
-        :enableSpring="settingStore.useAMSpring"
+    <div :key="amLyricsData?.[0]?.startTime" :class="['lyric-am', { pure: statusStore.pureLyricMode }]">
+      <LyricPlayer ref="lyricPlayerRef" :lyricLines="amLyricsData" :currentTime="playSeek"
+        :playing="statusStore.playStatus" :enableSpring="settingStore.useAMSpring"
         :enableScale="settingStore.useAMSpring"
         :alignPosition="settingStore.lyricsScrollPosition === 'center' ? 0.5 : 0.2"
-        :enableBlur="settingStore.lyricsBlur"
-        :style="{
+        :enableBlur="settingStore.lyricsBlur" :style="{
           '--amll-lyric-view-color': mainColor,
           '--amll-lyric-player-font-size': settingStore.lyricFontSize + 'px',
           'font-weight': settingStore.lyricFontBold ? 'bold' : 'normal',
           'font-family': settingStore.LyricFont !== 'follow' ? settingStore.LyricFont : '',
-        }"
-        class="am-lyric"
-        @line-click="jumpSeek"
-      />
+        }" class="am-lyric" @line-click="jumpSeek" />
     </div>
   </Transition>
 </template>
@@ -54,10 +43,39 @@ const mainColor = computed(() => {
   return `rgb(${statusStore.mainColor})`;
 });
 
+// 检查是否为纯音乐歌词
+const isPureInstrumental = (lyrics: LyricLine[]): boolean => {
+  if (!lyrics || lyrics.length === 0) return false;
+  const instrumentalKeywords = ['纯音乐', 'instrumental', '请欣赏'];
+
+  if (lyrics.length === 1) {
+    const content = lyrics[0].words?.[0]?.word || '';
+    return instrumentalKeywords.some(keyword => content.toLowerCase().includes(keyword.toLowerCase()));
+  }
+
+  if (lyrics.length <= 3) {
+    const allContent = lyrics.map(line => line.words?.[0]?.word || '').join('');
+    return instrumentalKeywords.some(keyword => allContent.toLowerCase().includes(keyword.toLowerCase()));
+  }
+  return false;
+};
+
 // 当前歌词
 const amLyricsData = computed<LyricLine[]>(() => {
-  const isYrc = musicStore.songLyric.yrcData?.length && settingStore.showYrc;
-  return isYrc ? musicStore.songLyric.yrcAMData : musicStore.songLyric.lrcAMData;
+  const { songLyric } = musicStore;
+  if (!songLyric) return [];
+
+  // 优先使用逐字歌词(YRC/TTML)
+  const useYrc = songLyric.yrcAMData?.length && settingStore.showYrc;
+  const lyrics = useYrc ? songLyric.yrcAMData : songLyric.lrcAMData;
+
+  // 简单检查歌词有效性
+  if (!Array.isArray(lyrics) || lyrics.length === 0) return [];
+
+  // 检查是否为纯音乐
+  if (isPureInstrumental(lyrics)) return [];
+
+  return lyrics;
 });
 
 // 进度跳转
@@ -85,15 +103,14 @@ onBeforeUnmount(() => {
   height: 100%;
   overflow: hidden;
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
-  mask: linear-gradient(
-    180deg,
-    hsla(0, 0%, 100%, 0) 0,
-    hsla(0, 0%, 100%, 0.6) 5%,
-    #fff 10%,
-    #fff 75%,
-    hsla(0, 0%, 100%, 0.6) 85%,
-    hsla(0, 0%, 100%, 0)
-  );
+  mask: linear-gradient(180deg,
+      hsla(0, 0%, 100%, 0) 0,
+      hsla(0, 0%, 100%, 0.6) 5%,
+      #fff 10%,
+      #fff 75%,
+      hsla(0, 0%, 100%, 0.6) 85%,
+      hsla(0, 0%, 100%, 0));
+
   :deep(.am-lyric) {
     width: 100%;
     height: 100%;
@@ -104,11 +121,14 @@ onBeforeUnmount(() => {
     padding-right: 80px;
     margin-left: -2rem;
   }
+
   &.pure {
     text-align: center;
+
     :deep(.am-lyric) {
       margin: 0;
       padding: 0 80px;
+
       div {
         transform-origin: center;
       }

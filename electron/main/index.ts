@@ -116,8 +116,8 @@ class MainProcess {
     const options: BrowserWindowConstructorOptions = {
       width: this.store?.get("window").width,
       height: this.store?.get("window").height,
-      minHeight: 800,
-      minWidth: 1280,
+      minHeight: 600,
+      minWidth: 800,
       // 菜单栏
       titleBarStyle: "customButtonsOnHover",
       // 立即显示窗口
