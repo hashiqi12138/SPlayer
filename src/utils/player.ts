@@ -4,7 +4,7 @@ import { Howl, Howler } from "howler";
 import { cloneDeep } from "lodash-es";
 import { useMusicStore, useStatusStore, useDataStore, useSettingStore } from "@/stores";
 import { parsedLyricsData, resetSongLyric, parseLocalLyric, parseTTMLToAMLL } from "./lyric";
-import { songUrl, unlockSongUrl, songLyric, songChorus, songLyricTTML } from "@/api/song";
+import { songUrl, songLyric, songChorus, songLyricTTML, unlockSongUrlNew } from "@/api/song";
 import { getCoverColorData } from "@/utils/color";
 import { calculateProgress } from "./time";
 import { isElectron, isDev } from "./helper";
@@ -182,20 +182,17 @@ class Player {
       if (!songId || !keyWord) return null;
       // 尝试解锁
       const results = await Promise.allSettled([
-        unlockSongUrl(songId, keyWord, "netease"),
-        unlockSongUrl(songId, keyWord, "kuwo"),
+        unlockSongUrlNew(songId, keyWord),
       ]);
       // 解析结果
-      const [neteaseRes, kuwoRes] = results;
+      const [neteaseRes] = results;
       if (
         neteaseRes.status === "fulfilled" &&
         neteaseRes.value.code === 200 &&
-        neteaseRes.value.url
+        neteaseRes.value.data &&
+        neteaseRes.value.data.url
       ) {
-        return neteaseRes.value.url;
-      }
-      if (kuwoRes.status === "fulfilled" && kuwoRes.value.code === 200 && kuwoRes.value.url) {
-        return kuwoRes.value.url;
+        return neteaseRes.value.data.url;
       }
       return null;
     } catch (error) {
@@ -605,7 +602,7 @@ class Player {
           await this.createPlayer(url, autoPlay, seek);
         }
         // 尝试解灰
-        else if (isElectron && type !== "radio" && settingStore.useSongUnlock) {
+        else if (type !== "radio" && settingStore.useSongUnlock) {
           const unlockUrl = await this.getUnlockSongUrl(playSongData);
           if (unlockUrl) {
             statusStore.playUblock = true;

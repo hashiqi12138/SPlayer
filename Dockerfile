@@ -9,8 +9,7 @@ RUN apk add --no-cache \
     dos2unix \
     gettext \
     && npm install -g \
-    @unblockneteasemusic/server \
-    NeteaseCloudMusicApi \
+    @neteaseapireborn/api@4.29.2 \
     && wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp \
     && chmod +x /usr/local/bin/yt-dlp
 
@@ -20,7 +19,7 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED=0 \
     UNBLOCK_PORT=80 \
     UNBLOCK_INTERNAL_PORT=443 \
     NETEASE_SERVER_IP="220.197.30.65" \
-    UNBLOCK_SOURCES="kugou kuwo bilibili"
+    UNBLOCK_SOURCE="pyncmd,qq,bodian,migu,kugou"
 
 # 创建并配置启动脚本
 RUN echo $'#!/bin/sh\n\
@@ -30,23 +29,9 @@ echo "Container starting at $(date)"\n\
 # 应用系统参数\n\
 sysctl -p\n\
 \n\
-# 启动 unblockneteasemusic 服务\n\
-echo "Starting unblockneteasemusic on port $UNBLOCK_PORT (internal: $UNBLOCK_INTERNAL_PORT)"\n\
-npx unblockneteasemusic -p ${UNBLOCK_PORT}:${UNBLOCK_INTERNAL_PORT} -s -f ${NETEASE_SERVER_IP} -o ${UNBLOCK_SOURCES} > /var/log/unblock.log 2>&1 &\n\
-\n\
-# 更新 hosts 文件\n\
-echo "Updating /etc/hosts for music.163.com domains"\n\
-{\n\
-    echo "127.0.0.1 music.163.com";\n\
-    echo "127.0.0.1 interface.music.163.com";\n\
-    echo "127.0.0.1 interface3.music.163.com";\n\
-    echo "127.0.0.1 interface.music.163.com.163jiasu.com";\n\
-    echo "127.0.0.1 interface3.music.163.com.163jiasu.com";\n\
-} | tee -a /etc/hosts\n\
-\n\
-# 启动 NeteaseCloudMusicApi\n\
-echo "Starting NeteaseCloudMusicApi on port $NETEASE_API_PORT"\n\
-npx NeteaseCloudMusicApi --port $NETEASE_API_PORT > /var/log/api.log 2>&1 &\n\
+# 启动 @neteaseapireborn/api\n\
+echo "Starting @neteaseapireborn/api on port $NETEASE_API_PORT"\n\
+npx @neteaseapireborn/api@4.29.2 --port $NETEASE_API_PORT > /var/log/api.log 2>&1 &\n\
 \n\
 # 启动 Nginx（前台运行）\n\
 echo "Starting Nginx on port 25884"\n\

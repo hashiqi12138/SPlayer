@@ -71,6 +71,14 @@ export const unlockSongUrl = (id: number, keyword: string, server: "netease" | "
   });
 };
 
+export const unlockSongUrlNew = (id: number, keyword: string, source = "migu,kugou,qq,bodian,pyncmd") => {
+  const params = { id, source } 
+  return request({
+    url: `/song/url/match`,
+    params,
+  });
+};
+
 // 获取歌曲歌词
 export const songLyric = (id: number) => {
   return request({
