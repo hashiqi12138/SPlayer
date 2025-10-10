@@ -440,7 +440,7 @@ class Player {
       const settingStore = useSettingStore();
       const [lyricRes, ttmlContent] = await Promise.all([
         songLyric(id),
-        songLyricTTML(id)
+        // songLyricTTML(id)
       ]);
       parsedLyricsData(lyricRes);
       if (ttmlContent && settingStore.enableTTMLLyric) {
