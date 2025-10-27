@@ -55,6 +55,9 @@
             <n-tag v-if="song.originCoverType === 1" :bordered="false" type="primary" round>
               原
             </n-tag>
+            <n-tag v-if="song.originCoverType === 2" :bordered="false" type="info" round>
+              翻唱
+            </n-tag>
             <n-tag v-if="song.free === 1" :bordered="false" type="error" round> VIP </n-tag>
             <n-tag v-if="song.free === 4" :bordered="false" type="error" round> EP </n-tag>
             <!-- 云盘 -->

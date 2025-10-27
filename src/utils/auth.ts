@@ -21,6 +21,7 @@ import { dailyRecommend } from "@/api/rec";
 import { isElectron } from "./helper";
 import { likePlaylist, playlistTracks } from "@/api/playlist";
 import { likeArtist } from "@/api/artist";
+import { likeAlbum } from "@/api/album";
 import { radioSub } from "@/api/radio";
 
 /**
@@ -236,83 +237,50 @@ export const toLikeSong = debounce(
   { leading: true, trailing: false },
 );
 
+const toLikeSomething =
+  (
+    actionName: string,
+    thingName: string,
+    request: () => (id: number, t: 1 | 2) => Promise<{ code: number }>,
+    update: () => Promise<void>,
+  ) => debounce(
+    async (id: number, like: boolean) => {
+      // 错误情况
+      if (!id) return;
+      if (!isLogin()) {
+        window.$message.warning("请登录后使用");
+        return;
+      }
+      if (isLogin() === 2) {
+        window.$message.warning("该登录模式暂不支持该操作");
+        return;
+      }
+      // 请求
+      const { code } = await request()(id, like ? 1 : 2);
+      if (code === 200) {
+        window.$message.success((like ? "" : "取消") + actionName + thingName + "成功");
+        // 更新
+        await update();
+      } else {
+        window.$message.success((like ? "" : "取消") + actionName + thingName + "失败，请重试");
+        return;
+      }
+    },
+    300,
+    { leading: true, trailing: false },
+  );
+
 // 收藏/取消收藏歌单
-export const toLikePlaylist = debounce(
-  async (id: number, like: boolean) => {
-    if (!id) return;
-    if (!isLogin()) {
-      window.$message.warning("请登录后使用");
-      return;
-    }
-    if (isLogin() === 2) {
-      window.$message.warning("该登录模式暂不支持该操作");
-      return;
-    }
-    const { code } = await likePlaylist(id, like ? 1 : 2);
-    if (code === 200) {
-      window.$message.success((like ? "收藏" : "取消收藏") + "歌单成功");
-      // 更新
-      await updateUserLikePlaylist();
-    } else {
-      window.$message.success((like ? "收藏" : "取消收藏") + "歌单失败，请重试");
-      return;
-    }
-  },
-  300,
-  { leading: true, trailing: false },
-);
+export const toLikePlaylist = toLikeSomething("收藏", "歌单", () => likePlaylist, updateUserLikePlaylist)
+
+// 收藏/取消收藏专辑
+export const toLikeAlbum = toLikeSomething("收藏", "专辑", () => likeAlbum, updateUserLikeAlbums)
 
 // 收藏/取消收藏歌手
-export const toLikeArtist = debounce(
-  async (id: number, like: boolean) => {
-    if (!id) return;
-    if (!isLogin()) {
-      window.$message.warning("请登录后使用");
-      return;
-    }
-    if (isLogin() === 2) {
-      window.$message.warning("该登录模式暂不支持该操作");
-      return;
-    }
-    const { code } = await likeArtist(id, like ? 1 : 2);
-    if (code === 200) {
-      window.$message.success((like ? "收藏" : "取消收藏") + "歌手成功");
-      // 更新
-      await updateUserLikeArtists();
-    } else {
-      window.$message.success((like ? "收藏" : "取消收藏") + "歌手失败，请重试");
-      return;
-    }
-  },
-  300,
-  { leading: true, trailing: false },
-);
+export const toLikeArtist = toLikeSomething("收藏", "歌手", () => likeArtist, updateUserLikeArtists)
 
 // 订阅/取消订阅播客
-export const toSubRadio = debounce(
-  async (id: number, like: boolean) => {
-    if (!id) return;
-    if (!isLogin()) {
-      window.$message.warning("请登录后使用");
-      return;
-    }
-    if (isLogin() === 2) {
-      window.$message.warning("该登录模式暂不支持该操作");
-      return;
-    }
-    const { code } = await radioSub(id, like ? 1 : 0);
-    if (code === 200) {
-      window.$message.success((like ? "订阅" : "取消订阅") + "播客成功");
-      // 更新
-      await updateUserLikeDjs();
-    } else {
-      window.$message.success((like ? "订阅" : "取消订阅") + "播客失败，请重试");
-      return;
-    }
-  },
-  300,
-  { leading: true, trailing: false },
-);
+export const toSubRadio = toLikeSomething("订阅", "播客", () => radioSub, updateUserLikeDjs)
 
 // 循环获取用户喜欢数据
 const setUserLikeDataLoop = async <T>(

@@ -9,14 +9,17 @@ import JumpArtist from "@/components/Modal/JumpArtist.vue";
 import UserAgreement from "@/components/Modal/UserAgreement.vue";
 import SongInfoEditor from "@/components/Modal/SongInfoEditor.vue";
 import PlaylistAdd from "@/components/Modal/PlaylistAdd.vue";
-import batchList from "@/components/Modal/batchList.vue";
+import BatchList from "@/components/Modal/BatchList.vue";
 import CloudMatch from "@/components/Modal/CloudMatch.vue";
 import CreatePlaylist from "@/components/Modal/CreatePlaylist.vue";
 import UpdatePlaylist from "@/components/Modal/UpdatePlaylist.vue";
 import DownloadSong from "@/components/Modal/DownloadSong.vue";
 import MainSetting from "@/components/Setting/MainSetting.vue";
 import UpdateApp from "@/components/Modal/UpdateApp.vue";
-import ExcludeKeywords from "@/components/Modal/ExcludeKeywords.vue";
+import ExcludeLyrics from "@/components/Modal/ExcludeLyrics.vue";
+import ChangeRate from "@/components/Modal/ChangeRate.vue";
+import AutoClose from "@/components/Modal/AutoClose.vue";
+import Equalizer from "@/components/Modal/Equalizer.vue";
 
 // 用户协议
 export const openUserAgreement = () => {
@@ -131,7 +134,7 @@ export const openBatchList = (data: SongType[], isLocal: boolean, playListId?: n
       maxWidth: "70vw",
     },
     title: "批量操作",
-    content: () => h(batchList, { data, isLocal, playListId }),
+    content: () => h(BatchList, { data, isLocal, playListId }),
   });
 };
 
@@ -245,7 +248,49 @@ export const openLyricExclude = () => {
     style: { width: "600px" },
     title: "歌词排除内容",
     content: () => {
-      return h(ExcludeKeywords);
+      return h(ExcludeLyrics);
+    },
+  });
+};
+
+/** 打开播放速度弹窗 */
+export const openChangeRate = () => {
+  window.$modal.create({
+    preset: "card",
+    transformOrigin: "center",
+    autoFocus: false,
+    style: { width: "600px" },
+    title: "播放速度",
+    content: () => {
+      return h(ChangeRate);
+    },
+  });
+};
+
+/** 打开自动关闭弹窗 */
+export const openAutoClose = () => {
+  window.$modal.create({
+    preset: "card",
+    transformOrigin: "center",
+    autoFocus: false,
+    style: { width: "600px" },
+    title: "自动关闭",
+    content: () => {
+      return h(AutoClose);
+    },
+  });
+};
+
+/** 打开均衡器弹窗 */
+export const openEqualizer = () => {
+  window.$modal.create({
+    preset: "card",
+    transformOrigin: "center",
+    autoFocus: false,
+    style: { width: "620px" },
+    title: "均衡器",
+    content: () => {
+      return h(Equalizer);
     },
   });
 };

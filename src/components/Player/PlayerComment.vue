@@ -1,38 +1,40 @@
 <!-- 播放器 - 评论 -->
 <template>
-  <div class="player-comment">
-    <n-scrollbar ref="lyricScroll" class="lyric-scroll">
-      <template v-if="commentHotData">
+  <Transition name="fade" mode="out-in">
+    <div :key="songId" class="player-comment">
+      <n-scrollbar ref="lyricScroll" class="lyric-scroll">
+        <template v-if="commentHotData">
+          <div class="placeholder">
+            <div class="title">
+              <SvgIcon name="Fire" />
+              <span>热门评论</span>
+            </div>
+          </div>
+          <CommentList
+            :data="commentHotData"
+            :loading="commentHotData?.length === 0"
+            :type="songType"
+            transparent
+          />
+        </template>
         <div class="placeholder">
           <div class="title">
-            <SvgIcon name="Fire" />
-            <span>热门评论</span>
+            <SvgIcon name="Message" />
+            <span>全部评论</span>
           </div>
         </div>
         <CommentList
-          :data="commentHotData"
-          :loading="commentHotData?.length === 0"
+          :data="commentData"
+          :loading="commentLoading"
           :type="songType"
+          :loadMore="commentHasMore"
           transparent
+          @loadMore="loadMoreComment"
         />
-      </template>
-      <div class="placeholder">
-        <div class="title">
-          <SvgIcon name="Message" />
-          <span>全部评论</span>
-        </div>
-      </div>
-      <CommentList
-        :data="commentData"
-        :loading="commentLoading"
-        :type="songType"
-        :loadMore="commentHasMore"
-        transparent
-        @loadMore="loadMoreComment"
-      />
-      <div class="placeholder" />
-    </n-scrollbar>
-  </div>
+        <div class="placeholder" />
+      </n-scrollbar>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +100,15 @@ const loadMoreComment = () => {
   commentPage.value += 1;
   getAllComment();
 };
+
+// 歌曲id变化
+watch(
+  () => songId.value,
+  () => {
+    getHotCommentData();
+    getAllComment();
+  },
+);
 
 onMounted(() => {
   getHotCommentData();

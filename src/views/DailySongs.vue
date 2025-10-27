@@ -37,7 +37,13 @@
       </n-flex>
     </div>
     <!-- 列表 -->
-    <SongList :data="musicStore.dailySongsData.list" :loading="true" height="auto" />
+    <SongList
+      :data="musicStore.dailySongsData.list"
+      :loading="true"
+      height="auto"
+      isDailyRecommend
+      disabledSort
+    />
   </div>
 </template>
 

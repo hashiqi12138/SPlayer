@@ -1,7 +1,7 @@
 import { BrowserWindow, nativeImage, nativeTheme, ThumbarButton } from "electron";
 import { join } from "path";
-import { isWin } from "./utils";
-import log from "./logger";
+import { isWin } from "../utils/config";
+import { thumbarLog } from "../logger";
 
 enum ThumbarKeys {
   Play = "play",
@@ -16,6 +16,9 @@ export interface Thumbar {
   clearThumbar(): void;
   updateThumbar(playing: boolean, clean?: boolean): void;
 }
+
+// 缩略图单例
+let thumbar: Thumbar | null = null;
 
 // 工具栏图标
 const thumbarIcon = (filename: string) => {
@@ -63,6 +66,9 @@ class createThumbar implements Thumbar {
   private _next: ThumbarButton;
   private _play: ThumbarButton;
   private _pause: ThumbarButton;
+  // 当前播放状态
+  private _isPlaying: boolean = false;
+  
   constructor(win: BrowserWindow) {
     // 初始化数据
     this._win = win;
@@ -74,26 +80,62 @@ class createThumbar implements Thumbar {
     this._next = this._thumbar.get(ThumbarKeys.Next)!;
     // 初始化工具栏
     this.updateThumbar();
+    // 监听主题变化
+    this.initThemeListener();
   }
+  
+  // 初始化主题监听器
+  private initThemeListener() {
+    nativeTheme.on("updated", () => {
+      this.refreshThumbarButtons();
+    });
+  }
+  
+  // 刷新工具栏按钮（主题变化时）
+  private refreshThumbarButtons() {
+    // 重新创建按钮
+    this._thumbar = createThumbarButtons(this._win);
+    this._play = this._thumbar.get(ThumbarKeys.Play)!;
+    this._pause = this._thumbar.get(ThumbarKeys.Pause)!;
+    this._prev = this._thumbar.get(ThumbarKeys.Prev)!;
+    this._next = this._thumbar.get(ThumbarKeys.Next)!;
+    // 更新工具栏
+    this.updateThumbar(this._isPlaying);
+  }
+  
   // 更新工具栏
   updateThumbar(playing: boolean = false, clean: boolean = false) {
+    this._isPlaying = playing;
     if (clean) return this.clearThumbar();
     this._win.setThumbarButtons([this._prev, playing ? this._pause : this._play, this._next]);
   }
+  
   // 清除工具栏
   clearThumbar() {
     this._win.setThumbarButtons([]);
   }
 }
 
+/**
+ * 初始化缩略图工具栏
+ * @param win 窗口
+ * @returns 缩略图工具栏
+ */
 export const initThumbar = (win: BrowserWindow) => {
   try {
     // 若非 Win
     if (!isWin) return null;
-    log.info("🚀 ThumbarButtons Startup");
-    return new createThumbar(win);
+    thumbarLog.info("🚀 ThumbarButtons Startup");
+    thumbar = new createThumbar(win);
+    return thumbar;
   } catch (error) {
-    log.error("❌ ThumbarButtons Error", error);
+    thumbarLog.error("❌ ThumbarButtons Error", error);
     throw error;
   }
 };
+
+/**
+ * 获取缩略图工具栏
+ * @returns 缩略图工具栏
+ */
+export const getThumbar = () => thumbar;

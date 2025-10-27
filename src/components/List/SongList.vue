@@ -15,7 +15,7 @@
       <Transition name="fade" mode="out-in">
         <VirtList
           ref="listRef"
-          :key="listData?.[0]?.id"
+          :key="listKey"
           :list="listData"
           :minSize="94"
           :buffer="2"
@@ -62,7 +62,15 @@
               :hiddenSize="hiddenSize"
               @dblclick.stop="player.updatePlayList(listData, itemData, playListId)"
               @contextmenu.stop="
-                songListMenuRef?.openDropdown($event, listData, itemData, index, type, playListId)
+                songListMenuRef?.openDropdown(
+                  $event,
+                  listData,
+                  itemData,
+                  index,
+                  type,
+                  playListId,
+                  isDailyRecommend,
+                )
               "
             />
           </template>
@@ -114,7 +122,7 @@ import type { DropdownOption } from "naive-ui";
 import type { SongType, SortType } from "@/types/main";
 import { useMusicStore, useStatusStore } from "@/stores";
 import { VirtList } from "vue-virt-list";
-import { cloneDeep, entries, isEmpty } from "lodash-es";
+import { entries, isEmpty } from "lodash-es";
 import { sortOptions } from "@/utils/meta";
 import { renderIcon } from "@/utils/helper";
 import SongListMenu from "@/components/Menu/SongListMenu.vue";
@@ -143,11 +151,14 @@ const props = withDefaults(
     disabledSort?: boolean;
     // 播放歌单 ID
     playListId?: number;
+    // 是否为每日推荐
+    isDailyRecommend?: boolean;
   }>(),
   {
     type: "song",
     loadingText: "努力加载中...",
     playListId: 0,
+    isDailyRecommend: false,
   },
 );
 
@@ -179,8 +190,9 @@ const songListMenuRef = ref<InstanceType<typeof SongListMenu> | null>(null);
 
 // 列表数据
 const listData = computed<SongType[]>(() => {
-  const data = cloneDeep(props.data);
-  if (props.disabledSort) return data;
+  if (props.disabledSort) return props.data;
+  // 创建副本用于排序（避免修改原数组）
+  const data = [...props.data];
   // 排序
   switch (statusStore.listSort) {
     case "titleAZ":
@@ -210,6 +222,16 @@ const listData = computed<SongType[]>(() => {
     default:
       return data;
   }
+});
+
+// 虚拟列表 key
+const listKey = computed(() => {
+  // 每日推荐
+  if (props.isDailyRecommend) {
+    return musicStore.dailySongsData.timestamp || 0;
+  }
+  // 其他列表长度（检测增删操作）
+  return listData.value?.length || 0;
 });
 
 // 列表是否具有播放歌曲
@@ -360,7 +382,6 @@ onBeforeUnmount(() => {
     }
     .meta {
       width: 50px;
-      font-size: 13px;
       text-align: center;
       &.size {
         width: 60px;

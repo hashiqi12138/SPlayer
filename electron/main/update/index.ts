@@ -1,9 +1,17 @@
-import { type BrowserWindow } from "electron";
+import { app, type BrowserWindow } from "electron";
+import { updateLog } from "../logger";
 import electronUpdater from "electron-updater";
-import log from "./logger";
+import { isDev } from "../utils/config";
 
 // import
 const { autoUpdater } = electronUpdater;
+
+// 开发环境启用
+if (isDev) {
+  Object.defineProperty(app, "isPackaged", {
+    get: () => true,
+  });
+}
 
 // 更新源
 autoUpdater.setFeedURL({
@@ -28,19 +36,19 @@ const initUpdaterListeners = (win: BrowserWindow) => {
   // 当有新版本可用时
   autoUpdater.on("update-available", (info) => {
     win.webContents.send("update-available", info);
-    log.info(`🚀 New version available: ${info.version}`);
+    updateLog.info(`🚀 New version available: ${info.version}`);
   });
 
   // 更新下载进度
   autoUpdater.on("download-progress", (progress) => {
     win.webContents.send("download-progress", progress);
-    log.info(`🚀 Downloading: ${progress.percent}%`);
+    updateLog.info(`🚀 Downloading: ${progress.percent}%`);
   });
 
   // 当下载完成时
   autoUpdater.on("update-downloaded", (info) => {
     win.webContents.send("update-downloaded", info);
-    log.info(`🚀 Update downloaded: ${info.version}`);
+    updateLog.info(`🚀 Update downloaded: ${info.version}`);
     // 安装更新
     autoUpdater.quitAndInstall();
   });
@@ -48,13 +56,13 @@ const initUpdaterListeners = (win: BrowserWindow) => {
   // 当没有新版本时
   autoUpdater.on("update-not-available", (info) => {
     if (isShowTip) win.webContents.send("update-not-available", info);
-    log.info(`✅ No new version available: ${info.version}`);
+    updateLog.info(`✅ No new version available: ${info.version}`);
   });
 
   // 更新错误
   autoUpdater.on("error", (err) => {
     win.webContents.send("update-error", err);
-    log.error(`❌ Update error: ${err.message}`);
+    updateLog.error(`❌ Update error: ${err.message}`);
   });
 
   isInit = true;

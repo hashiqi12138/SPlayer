@@ -202,6 +202,18 @@
             class="set"
           />
         </n-card>
+        <n-card class="set-item">
+          <div class="label">
+            <n-text class="name">显示长音发光效果</n-text>
+            <n-text class="tip" :depth="3"> 当单词持续时间过长时显示发光效果 </n-text>
+          </div>
+          <n-switch
+            v-model:value="settingStore.showYrcLongEffect"
+            :disabled="settingStore.useAMLyrics || !settingStore.showYrcAnimation"
+            :round="false"
+            class="set"
+          />
+        </n-card>
       </n-collapse-transition>
       <n-card class="set-item">
         <div class="label">
@@ -234,11 +246,45 @@
       </n-card>
       <n-card class="set-item">
         <div class="label">
-          <n-text class="name">歌词排除内容</n-text>
-          <n-text class="tip" :depth="3"> 歌词中包含的关键词将不会显示 </n-text>
+          <n-text class="name">启用歌词排除</n-text>
+          <n-text class="tip" :depth="3">
+            开启后可配置排除歌词，包含关键词或匹配正则表达式的歌词行将不会显示
+          </n-text>
         </div>
-        <n-button type="primary" strong secondary @click="openLyricExclude">配置</n-button>
+        <n-switch v-model:value="settingStore.enableExcludeLyrics" class="set" :round="false" />
       </n-card>
+      <n-collapse-transition :show="settingStore.enableExcludeLyrics">
+        <n-card class="set-item">
+          <div class="label">
+            <n-text class="name">TTML 歌词排除</n-text>
+            <n-text class="tip" :depth="3">
+              是否要对 TTML 歌词进行歌词排除 <br />
+              AMLL TTML DB 对此有硬性规定，不得包含作词、作曲等歌词无关内容，因此大多情况下无需开启
+            </n-text>
+          </div>
+          <n-switch v-model:value="settingStore.enableExcludeTTML" class="set" :round="false" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="label">
+            <n-text class="name">本地歌词排除</n-text>
+            <n-text class="tip" :depth="3">
+              是否要对来自本地的歌词进行歌词排除，这包含本地覆盖的在线歌词和本地歌曲中的歌词
+            </n-text>
+          </div>
+          <n-switch
+            v-model:value="settingStore.enableExcludeLocalLyrics"
+            class="set"
+            :round="false"
+          />
+        </n-card>
+        <n-card class="set-item">
+          <div class="label">
+            <n-text class="name">歌词排除内容</n-text>
+            <n-text class="tip" :depth="3"> 包含关键词或匹配正则表达式的歌词行将不会显示 </n-text>
+          </div>
+          <n-button type="primary" strong secondary @click="openLyricExclude">配置</n-button>
+        </n-card>
+      </n-collapse-transition>
     </div>
     <div class="set-list">
       <n-h3 prefix="bar"> Apple Music-like Lyrics </n-h3>
@@ -262,9 +308,10 @@
       </n-card>
       <n-card class="set-item">
         <div class="label">
-          <n-text class="name">启用 TTML 歌词</n-text>
+          <n-text class="name">启用在线 TTML 歌词</n-text>
           <n-text class="tip" :depth="3">
-            是否启用 TTML 歌词（如有），TTML 歌词支持逐字、翻译、音译等功能, 将会在下一首歌生效
+            是否从 AMLL TTML DB 获取歌词（如有），TTML
+            歌词支持逐字、翻译、音译等功能，将会在下一首歌生效
           </n-text>
         </div>
         <n-switch v-model:value="settingStore.enableTTMLLyric" class="set" :round="false" />

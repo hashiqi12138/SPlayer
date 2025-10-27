@@ -101,7 +101,13 @@
                 </template>
                 {{ loading ? "加载中..." : "播放" }}
               </n-button>
-              <n-button :focusable="false" strong secondary round>
+              <n-button
+                :focusable="false"
+                strong
+                secondary
+                round
+                @click="toLikeAlbum(albumId, !isLikeAlbum)"
+              >
                 <template #icon>
                   <SvgIcon :name="isLikeAlbum ? 'Favorite' : 'FavoriteBorder'" />
                 </template>
@@ -179,6 +185,7 @@ import { debounce } from "lodash-es";
 import { formatTimestamp } from "@/utils/time";
 import { openJumpArtist } from "@/utils/modal";
 import player from "@/utils/player";
+import { toLikeAlbum } from "@/utils/auth";
 
 const router = useRouter();
 const dataStore = useDataStore();

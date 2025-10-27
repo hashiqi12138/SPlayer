@@ -6,6 +6,7 @@ import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import viteCompression from "vite-plugin-compression";
+import VueDevTools from "vite-plugin-vue-devtools";
 import wasm from "vite-plugin-wasm";
 import { readFileSync } from "fs";
 
@@ -35,7 +36,6 @@ export default defineConfig(({ command, mode }) => {
           input: {
             index: resolve(__dirname, "electron/main/index.ts"),
             lyric: resolve(__dirname, "web/lyric.html"),
-            loading: resolve(__dirname, "web/loading.html"),
           },
         },
       },
@@ -56,6 +56,7 @@ export default defineConfig(({ command, mode }) => {
       root: ".",
       plugins: [
         vue(),
+        mode === "development" && VueDevTools(),
         AutoImport({
           imports: [
             "vue",
@@ -117,6 +118,7 @@ export default defineConfig(({ command, mode }) => {
         rollupOptions: {
           input: {
             index: resolve(__dirname, "index.html"),
+            loading: resolve(__dirname, "web/loading/index.html"),
           },
           output: {
             manualChunks: {

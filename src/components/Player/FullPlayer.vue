@@ -49,44 +49,42 @@
         :class="[
           'player-content',
           {
-            pure: statusStore.pureLyricMode,
+            pure: statusStore.pureLyricMode && musicStore.isHasLrc,
             'show-comment': isShowComment,
-            // 'no-lrc': !musicStore.isHasLrc,
+            'no-lrc': !musicStore.isHasLrc,
           },
         ]"
         @mousemove="playerMove"
       >
-        <div
-          v-if="
-            !(statusStore.pureLyricMode && musicStore.isHasLrc) ||
-            musicStore.playSong.type === 'radio'
-          "
-          class="content-left"
-        >
-          <!-- 封面 -->
-          <PlayerCover />
-          <!-- 数据 -->
-          <PlayerData :center="playerDataCenter" :theme="statusStore.mainColor" />
-        </div>
-        <Transition name="fade" mode="out-in">
-          <!-- 评论 -->
-          <PlayerComment v-if="isShowComment && !statusStore.pureLyricMode" />
-          <!-- 歌词 -->
-          <div v-else-if="musicStore.isHasLrc" class="content-right">
+        <Transition name="zoom">
+          <div
+            v-if="
+              !(statusStore.pureLyricMode && musicStore.isHasLrc) ||
+              musicStore.playSong.type === 'radio'
+            "
+            :key="musicStore.playSong.id"
+            class="content-left"
+          >
+            <!-- 封面 -->
+            <PlayerCover />
             <!-- 数据 -->
-            <!-- <PlayerData
-              v-if="
-                (statusStore.pureLyricMode && musicStore.isHasLrc) ||
-                (settingStore.playerType === 'record' && musicStore.isHasLrc)
-              "
-              :center="statusStore.pureLyricMode"
-              :theme="mainColor"
-            /> -->
-            <!-- 歌词 -->
-            <MainAMLyric v-if="settingStore.useAMLyrics" />
-            <MainLyric v-else />
+            <PlayerData :center="playerDataCenter" :theme="statusStore.mainColor" />
           </div>
         </Transition>
+        <!-- 评论 -->
+        <PlayerComment v-if="isShowComment && !statusStore.pureLyricMode" />
+        <!-- 歌词 -->
+        <div v-else-if="musicStore.isHasLrc" class="content-right">
+          <!-- 数据 -->
+          <PlayerData
+            v-if="statusStore.pureLyricMode && musicStore.isHasLrc"
+            :center="statusStore.pureLyricMode"
+            :theme="statusStore.mainColor"
+          />
+          <!-- 歌词 -->
+          <MainAMLyric v-if="settingStore.useAMLyrics" />
+          <MainLyric v-else />
+        </div>
       </div>
     </Transition>
     <!-- 控制中心 -->
@@ -127,13 +125,7 @@ const isShowComment = computed<boolean>(
 );
 
 // 主内容 key
-const playerContentKey = computed(() => {
-  return `
-  ${musicStore.playSong?.id ?? 0}-
-  ${musicStore.isHasLrc}-
-  ${statusStore.pureLyricMode}-
-  ${isShowComment.value}`;
-});
+const playerContentKey = computed(() => `${statusStore.pureLyricMode}-${isShowComment.value}`);
 
 // 数据是否居中
 const playerDataCenter = computed<boolean>(
@@ -266,25 +258,36 @@ onBeforeUnmount(() => {
     }
   }
   .player-content {
+    position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
     width: 100%;
     height: calc(100vh - 160px);
     z-index: 0;
     .content-left {
+      position: absolute;
+      left: 0;
       flex: 1;
       min-width: 50%;
+      width: 50%;
       height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: width 0.3s;
+      transition:
+        width 0.3s,
+        opacity 0.3s,
+        transform 0.3s;
     }
     .content-right {
+      position: absolute;
+      right: 0;
       flex: 1;
       height: 100%;
+      width: 50%;
       max-width: 50%;
       display: flex;
       flex-direction: column;
@@ -296,11 +299,13 @@ onBeforeUnmount(() => {
     &.pure {
       .content-right {
         align-items: center;
+        width: 100%;
         max-width: 100%;
       }
     }
     &.show-comment {
       .content-left {
+        position: static;
         min-width: 40vw;
         max-width: 50vh;
         padding: 0 60px;
@@ -320,6 +325,12 @@ onBeforeUnmount(() => {
             }
           }
         }
+      }
+    }
+    // 无歌词
+    &.no-lrc {
+      .content-left {
+        width: 100%;
       }
     }
   }

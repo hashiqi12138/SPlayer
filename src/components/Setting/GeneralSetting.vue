@@ -193,6 +193,33 @@
       </n-card>
       <n-card class="set-item">
         <div class="label">
+          <n-text class="name">日语歌词字体</n-text>
+          <n-text class="tip" :depth="3"> 是否在歌词为日语时单独设置字体 </n-text>
+        </div>
+        <n-flex>
+          <Transition name="fade" mode="out-in">
+            <n-button
+              v-if="settingStore.japaneseLyricFont !== 'follow'"
+              type="primary"
+              strong
+              secondary
+              @click="settingStore.japaneseLyricFont = 'follow'"
+            >
+              恢复默认
+            </n-button>
+          </Transition>
+          <n-select
+            v-model:value="settingStore.japaneseLyricFont"
+            :options="[
+              { label: '跟随全局', value: 'follow' },
+              ...allFontsData.filter((v) => v.value !== 'default'),
+            ]"
+            class="set"
+          />
+        </n-flex>
+      </n-card>
+      <n-card class="set-item">
+        <div class="label">
           <n-text class="name">关闭软件时</n-text>
           <n-text class="tip" :depth="3">选择关闭软件的方式</n-text>
         </div>
@@ -252,9 +279,9 @@
 import type { SelectOption } from "naive-ui";
 import { useDataStore, useMusicStore, useSettingStore, useStatusStore } from "@/stores";
 import { isDev, isElectron } from "@/utils/helper";
+import { getCoverColor } from "@/utils/player-utils/song";
 import { isEmpty } from "lodash-es";
 import themeColor from "@/assets/data/themeColor.json";
-import player from "@/utils/player";
 
 const dataStore = useDataStore();
 const musicStore = useMusicStore();
@@ -359,7 +386,7 @@ const modeChange = (val: boolean) => {
 
 // 全局着色更改
 const themeGlobalColorChange = (val: boolean) => {
-  if (val) player.getCoverColor(musicStore.songCover);
+  if (val) getCoverColor(musicStore.songCover);
 };
 
 onMounted(() => {

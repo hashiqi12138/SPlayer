@@ -104,6 +104,21 @@
   transform: scale(0.4);
 }
 
+// zoom
+.zoom-enter-active,
+.zoom-leave-active {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+}
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
 // up
 .up-enter-active,
 .up-leave-active {

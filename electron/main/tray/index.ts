@@ -7,9 +7,9 @@ import {
   nativeImage,
   nativeTheme,
 } from "electron";
-import { isWin, appName } from "./utils";
+import { isWin, appName } from "../utils/config";
 import { join } from "path";
-import log from "./logger";
+import { trayLog } from "../logger";
 
 // 播放模式
 type PlayMode = "repeat" | "repeat-once" | "shuffle";
@@ -33,6 +33,9 @@ export interface MainTray {
   setDesktopLyricLock(lock: boolean): void;
   destroyTray(): void;
 }
+
+// 托盘单例
+let mainTrayInstance: MainTray | null = null;
 
 // 托盘图标
 const trayIcon = (filename: string) => {
@@ -219,11 +222,19 @@ class CreateTray implements MainTray {
     });
   }
   // 设置标题
+  /**
+   * 设置标题
+   * @param title 标题
+   */
   setTitle(title: string) {
+    this._win.setTitle(title);
     this._tray.setTitle(title);
     this._tray.setToolTip(title);
   }
-  // 设置播放名称
+  /**
+   * 设置播放名称
+   * @param name 播放名称
+   */
   setPlayName(name: string) {
     // 超长处理
     if (name.length > 20) name = name.slice(0, 20) + "...";
@@ -231,48 +242,80 @@ class CreateTray implements MainTray {
     // 更新菜单
     this.initTrayMenu();
   }
-  // 设置播放状态
+  /**
+   * 设置播放状态
+   * @param state 播放状态
+   */
   setPlayState(state: PlayState) {
     playState = state;
     // 更新菜单
     this.initTrayMenu();
   }
-  // 设置播放模式
+  /**
+   * 设置播放模式
+   * @param mode 播放模式
+   */
   setPlayMode(mode: PlayMode) {
     playMode = mode;
     // 更新菜单
     this.initTrayMenu();
   }
-  // 设置喜欢状态
+  /**
+   * 设置喜欢状态
+   * @param like 喜欢状态
+   */
   setLikeState(like: boolean) {
     likeSong = like;
     // 更新菜单
     this.initTrayMenu();
   }
-  // 桌面歌词开关
+  /**
+   * 桌面歌词开关
+   * @param show 桌面歌词开关状态
+   */
   setDesktopLyricShow(show: boolean) {
     desktopLyricShow = show;
     // 更新菜单
     this.initTrayMenu();
   }
-  // 锁定桌面歌词
+  /**
+   * 锁定桌面歌词
+   * @param lock 锁定桌面歌词状态
+   */
   setDesktopLyricLock(lock: boolean) {
     desktopLyricLock = lock;
     // 更新菜单
     this.initTrayMenu();
   }
-  // 销毁托盘
+  /**
+   * 销毁托盘
+   */
   destroyTray() {
     this._tray.destroy();
   }
 }
 
+/**
+ * 初始化托盘
+ * @param win 主窗口
+ * @param lyricWin 歌词窗口
+ * @returns 托盘实例
+ */
 export const initTray = (win: BrowserWindow, lyricWin: BrowserWindow) => {
   try {
-    log.info("🚀 Tray Process Startup");
-    return new CreateTray(win, lyricWin);
+    trayLog.info("🚀 Tray Process Startup");
+    const tray = new CreateTray(win, lyricWin);
+    // 保存单例实例
+    mainTrayInstance = tray;
+    return tray;
   } catch (error) {
-    log.error("❌ Tray Process Error", error);
+    trayLog.error("❌ Tray Process Error", error);
     return null;
   }
 };
+
+/**
+ * 获取托盘实例
+ * @returns 托盘实例
+ */
+export const getMainTray = (): MainTray | null => mainTrayInstance;
