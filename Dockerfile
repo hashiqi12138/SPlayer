@@ -31,7 +31,7 @@ sysctl -p\n\
 \n\
 # 启动 @neteaseapireborn/api\n\
 echo "Starting @neteaseapireborn/api on port $NETEASE_API_PORT"\n\
-npx @neteaseapireborn/api@4.29.2 --port $NETEASE_API_PORT > /var/log/api.log 2>&1 &\n\
+npx @neteasecloudmusicapienhanced/api@4.29.12 --port $NETEASE_API_PORT > /var/log/api.log 2>&1 &\n\
 \n\
 # 启动 Nginx（前台运行）\n\
 echo "Starting Nginx on port 25884"\n\
